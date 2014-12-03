@@ -1,47 +1,73 @@
 package main
 
 import (
-	"github.com/pbberlin/tools/util"
 	"io"
 	"net/http"
+
+	"github.com/pbberlin/tools/util"
 )
+
+func homePage(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	io.WriteString(w, "showing current articles data without newly randomizing\n\n")
+	s := util.IndentedDump(ArticlesRaw)
+	io.WriteString(w, *s)
+}
 
 func randomizeArticles(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	io.WriteString(w, "newly randomizing... \n\n")
 	randomizeArticlesInternal()
-	s := util.IndentedDump(articles)
+	s := util.IndentedDump(ArticlesRaw)
 	io.WriteString(w, *s)
 
 }
+
 func tokenizeArticles(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-
-	sizeAll := 0
-	for i := 0; i < len(articles); i++ {
-		lpA := &articles[i]
-		xx := *lpA
-		tokens, size := xx.Tokenize()
-		sizeAll += size
-
-		io.WriteString(w, spf("\n\narticle size is %v\n", size))
-		for i := 0; i < len(tokens); i++ {
-			x := tokens[i]
-			s := spf("%5v %2v %2v %v\n", x.Size, x.SemanticStart, x.SemanticEnd, x.Text)
-			io.WriteString(w, s)
-		}
-	}
-	io.WriteString(w, spf("\n\ntotal size  %v\n", sizeAll))
+	io.WriteString(w, "tokenizing articles ... \n\n")
+	b := articlesToRawString(ArticlesRaw)
+	w.Write(b.Bytes())
 }
 
-func homePage(w http.ResponseWriter, r *http.Request) {
-	s := util.IndentedDump(articles)
+func tokenizedShow(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	io.WriteString(w, "result of tokenizing articles ... \n\n")
+	s := util.IndentedDump(ArticlesAllTokenized)
 	io.WriteString(w, *s)
+}
+
+//--------------------------------------
+func pipelineAll(w http.ResponseWriter, r *http.Request) {
+	io.WriteString(w, "doing it all ... \n\n")
+	randomizeArticles(w, r)
+	tokenizeArticles(w, r)
+
+	blockifyAll()
+
+	io.WriteString(w, "---- ... \n\n")
+	s := util.IndentedDump(ArticlesBlockified)
+	io.WriteString(w, *s)
+}
+
+func backend(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	io.WriteString(w, "--  <a href='/'                   target='b_out'>Raw Articles</a><br>\n")
+	io.WriteString(w, "<a href='/randomize-articles' target='b_out'>Randomize Articles</a><br>\n")
+	io.WriteString(w, "<a href='/tokenize-articles'  target='b_out'>Tokenize  Articles</a><br>\n")
+	io.WriteString(w, "--  <a href='/tokenized-show'   target='b_out'>Tokenized Show</a><br>\n")
+
+	io.WriteString(w, "------------------------------------------<br>\n")
+	io.WriteString(w, "--  <a href='/pipeline-all'   target='b_out'  accesskey='p'><b>P</b>ipeline All</a><br>\n")
 }
 
 func init() {
 	http.HandleFunc("/", homePage)
 	http.HandleFunc("/randomize-articles", randomizeArticles)
 	http.HandleFunc("/tokenize-articles", tokenizeArticles)
-	pf("listening on 4000")
-	http.ListenAndServe("localhost:4001", nil)
+	http.HandleFunc("/tokenized-show", tokenizedShow)
+
+	http.HandleFunc("/pipeline-all", pipelineAll)
+	http.HandleFunc("/backend", backend)
+	pf("http server init complete\n")
 }

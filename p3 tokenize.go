@@ -1,7 +1,26 @@
 package main
 
+/*
+	Transforming articles with its sections into
+	=>
+     ArticlesAllTokenized
+     	[article_1]...
+     	[article_2]...
+			[WordGroupToken1]
+	     	[WordGroupToken2]
+	     	[WordGroupToken3]
+     	[article_n]
+			[WordGroupToken1]
+	     	[WordGroupToken2]
+	     	[WordGroupToken3]
+     	[article_n+1]...
+     	[article_n+2]...
+
+
+*/
+
 import (
-	// "github.com/pbberlin/tools/util"
+	"bytes"
 	"strings"
 )
 
@@ -12,8 +31,32 @@ type WordGroupToken struct {
 	Text          string
 }
 
-func (b *article) NormalizeForTokenize() {
-	// todo: make all tags lowercase, remove some attributes, normalize <BR >  to <br/>
+var ArticlesAllTokenized [][]WordGroupToken = make([][]WordGroupToken, 2)
+
+func articlesToRawString(articles []Article1) *bytes.Buffer {
+
+	b := new(bytes.Buffer)
+	ArticlesAllTokenized = nil
+
+	sizeAll := 0
+	for i := 0; i < len(articles); i++ {
+		lpPtrA := &articles[i]
+		tokens, size := lpPtrA.Tokenize()
+		sizeAll += size
+
+		ArticlesAllTokenized = append(ArticlesAllTokenized, make([][]WordGroupToken, 1)...)
+		ArticlesAllTokenized[i] = tokens
+
+		b.WriteString(spf("\n\narticle size is %v\n", size))
+		for i := 0; i < len(tokens); i++ {
+			x := tokens[i]
+			s := spf("%5v %2v %2v %v\n", x.Size, x.SemanticStart, x.SemanticEnd, x.Text)
+			b.WriteString(s)
+		}
+	}
+	b.WriteString(spf("\n\ntotal size  %v\n", sizeAll))
+
+	return b
 }
 
 // Tokenize() splits articles into smallest semantically contingent groups of words.
@@ -23,7 +66,7 @@ func (b *article) NormalizeForTokenize() {
 // Any attribuged inline markup is allowed i.e. <b class='blinking'>group of words</b>.
 // Block markup is only allowed as follows: <br/> <p></p>, <h1></h1>, <h2></h2>.
 // All lower case, all without attributes
-func (b *article) Tokenize() ([]WordGroupToken, int) {
+func (b *Article1) Tokenize() ([]WordGroupToken, int) {
 
 	if b.Ps == nil || len(b.Ps) == 0 {
 		panic("Fill Article before tokenizing it")
