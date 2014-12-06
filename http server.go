@@ -44,10 +44,15 @@ func pipelineAll(w http.ResponseWriter, r *http.Request) {
 	tokenizeArticles(w, r)
 
 	blockifyAll()
-
 	io.WriteString(w, "---- ... \n\n")
-	s := util.IndentedDump(ArticlesBlockified)
-	io.WriteString(w, *s)
+	s1 := util.IndentedDump(articlesBlockified)
+	io.WriteString(w, *s1)
+
+	amorphifyAll()
+	io.WriteString(w, "---- ... \n\n")
+	s2 := util.IndentedDump(articlesAmorphified)
+	io.WriteString(w, *s2)
+
 }
 
 func backend(w http.ResponseWriter, r *http.Request) {

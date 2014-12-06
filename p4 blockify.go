@@ -42,18 +42,16 @@ type ArticleBlockified struct {
 	Blocks    []*BlockifiedContent
 }
 
-var ArticlesBlockified []ArticleBlockified
+var articlesBlockified []ArticleBlockified
 
 const CHARS_BLOCK = 200
 
 func (a *ArticleBlockified) blockify(idxTokens int) *bytes.Buffer {
 
 	b := new(bytes.Buffer)
-	cntrBlock := 0
-	cntrArticle := 0
+	cntrBlock := 0   // number of chars
+	cntrArticle := 0 // number of chars for all blocks
 	tokens := ArticlesAllTokenized[idxTokens]
-
-	// a.Blocks = append(a.Blocks, make([]*BlockifiedContent, 22)...)
 
 	for i := 0; i < len(tokens); i++ {
 
@@ -63,12 +61,11 @@ func (a *ArticleBlockified) blockify(idxTokens int) *bytes.Buffer {
 		}
 
 		topBlock := a.Blocks[len(a.Blocks)-1]
-
 		topBlock.Tokens = append(topBlock.Tokens, &tokens[i])
 
 		cntrBlock += tokens[i].Size
 		cntrArticle += tokens[i].Size
-		a.Blocks[len(a.Blocks)-1].Size = cntrBlock
+		topBlock.Size = cntrBlock
 
 		b.WriteString(spf("%v %v %v\n", idxTokens, i, cntrBlock))
 	}
@@ -79,8 +76,8 @@ func (a *ArticleBlockified) blockify(idxTokens int) *bytes.Buffer {
 
 func blockifyAll() {
 	for i := 0; i < len(ArticlesAllTokenized); i++ {
-		ArticlesBlockified = append(ArticlesBlockified, make([]ArticleBlockified, 1)...)
-		ArticlesBlockified[i].Article1 = &ArticlesRaw[i]
-		ArticlesBlockified[i].blockify(i)
+		articlesBlockified = append(articlesBlockified, make([]ArticleBlockified, 1)...)
+		articlesBlockified[i].Article1 = &ArticlesRaw[i]
+		articlesBlockified[i].blockify(i)
 	}
 }
