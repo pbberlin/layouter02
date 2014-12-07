@@ -1,0 +1,101 @@
+
+	/* 
+		http://www.camma.ch/2010/01/12/css-layouts-mit-100-hoehe/ 
+		http://peterned.home.xs4all.nl/examples/csslayout1.html
+	*/
+
+	* {
+		margin: 0px;
+		padding: 0px;
+		/* if this causes columns to overflow,
+			then some intermittent/organizing div has no explicit 
+			font-size: 0px
+
+			Generally we can't use font-size percent, becasue 
+
+		*/
+		font-size: 14px; 	
+		line-height: 140%;
+		font-family: 'Open Sans', 'Times New Roman';
+		text-align: left;
+	}
+	* {
+		/* width not changed by padding or border-width */	
+	   -webkit-box-sizing: border-box;	
+	      -moz-box-sizing: border-box;	
+	           box-sizing: border-box;
+	   
+
+	}
+
+
+	html,body {
+		height:100%;  			/* for needed for #vp-container min-height */
+		background:#fff;		/* totally blanked out by #vp-container */
+	}
+	html {
+		overflow-y: scroll;  	/* force scrollbar always*/
+	}
+
+
+
+	#vp-container {
+		position: relative;      /* for footer positioning */
+		margin: 0 auto;          /* center, not in IE5 */
+		background-color: #aaa;
+		height:auto !important; /* real browsers */
+		height:100%;            /* IE6: treaded as min-height*/
+		min-height:100%;        /* real browsers */
+		width: 100%;
+	}
+		#vp-header {
+			padding:0.5em 1em;
+			border-bottom: 4px double gray;
+		}
+		#vp-content {
+			text-align: center;
+			background-color: #ddd;
+			padding-bottom: 5em;  /* bottom padding for footer */
+		}
+		#vp-footer {
+			position:absolute;      /* relative to vp-container */
+			width:100%;
+			bottom:0;               /* stick to bottom */
+
+			padding:0.5em 1em;
+			background-color: #aaa;
+			border-top: 4px double gray;
+		}
+
+
+	
+
+	* {
+		/* 
+			hyphenation - requires lang='de'  or lang='en' attribute in tag 
+			chrome/android have NO hyphenation capability
+		*/
+		-webkit-hyphens: auto;
+		   -moz-hyphens: auto;
+		    -ms-hyphens: auto;
+		        hyphens: auto; 	
+		hyphenate-limit-chars: auto 3;
+		hyphenate-limit-lines: 2;        		
+	}
+
+
+
+
+	pre {
+		font-size: 12px;
+		font-family: "Lucida Console", Monaco, monospace	
+	}
+
+
+
+	/* in conjunction with contenteditable and tabbing */
+	:focus {
+		background: pink;
+		outline: none;
+	}
+

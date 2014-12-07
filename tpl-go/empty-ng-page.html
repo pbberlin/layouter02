@@ -1,0 +1,35 @@
+{{define "tplBase"}}<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="icon" href="data:;base64,=">
+	<title>Backend</title>
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open Sans">	 
+	<link rel="stylesheet" href="/css/basic.css" media="screen" type="text/css" />
+	<link rel="stylesheet" href="/css/inline-block.css" media="screen" type="text/css" />
+</head>
+
+
+<body ng-app="layouterApp">
+
+<div id='vp-container'>
+
+	<div id='vp-header'>
+		{{fHTML .vpHeader.Msg}}
+	</div>
+
+	<div id='vp-content'>
+		<ng-view/>
+		{{template "tplContent" .vpContent }}
+	</div>  <!-- /vp-content -->
+
+
+	<div id='vp-footer'>
+		{{fHTML .vpFooter.Msg}}
+	</div>  <!-- /vp-footer -->
+
+</div>  <!-- /vp-container -->
+
+</body>
+</html>
+{{end}}

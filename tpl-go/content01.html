@@ -1,0 +1,36 @@
+{{ fHTML .CSS1}}
+
+<style>
+	.taken {
+		background-color: #a22;
+		opacity: 0.5;
+		text-align:center;
+		line-height:100px;
+	}
+	.free {
+		background-color: #2a2;
+		opacity: 0.5;
+		text-align:center;
+		line-height:100px;
+	}
+</style>
+
+<div class='blc'
+	style='
+		width:800px;
+		height:600px;
+		background-image: url("/img/bg.gif");
+		font-size:0px;
+	'
+	>
+	<div class='blc h2 w2 free' >aa</div> 
+	<div class='blc h1 w2 taken'>bb</div>
+	<div class='blc h3 w3 free'>bb</div>
+	<div class='blc h2 w2 free'>aa</div> 
+
+	{{range $idxAmorph, $lpAmorph := .Amorphs }}
+		<div class='blc h{{.Nrows}} w{{.Ncols}} free'>No{{$idxAmorph}}</div> 
+	{{end}}
+
+
+</div>

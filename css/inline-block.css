@@ -1,0 +1,111 @@
+		/* basic inlince block style */
+		.blc {
+			display:inline-block;
+			vertical-align:top;
+			position:relative;
+			margin: 0px;
+		}
+
+
+		/* 
+			Suppress spacing between inline blocks.
+
+			Give explicitly onto 
+				every corridor,  
+				every force-linebreak.
+			
+			Since inheritance is unreliable - and broken by i.e. *{font-size: 14px;}
+		*/
+		.bl-no-block-spaces {
+			font-size:0px;
+		}
+
+		/* level1 - block - fonts and margins */
+		.bl-h1 {
+			font-size:16px;
+			line-height: 125%;
+			font-weight:bold;
+
+
+			padding-top:5px;
+			padding-bottom:3px;
+
+			padding-left: 9px;
+
+			width:98%;
+			background-color: #ccc;
+			opacity: 0.9;
+
+		}
+
+
+		.columnar-margin {
+			font-size: 12px;  /* for getComputedStyle() at init */
+			letter-spacing: normal;
+
+			margin: 0px;
+			margin-top: 2px;
+			margin-bottom:8px;
+		}
+
+
+
+		/* borders in a separate layer */
+		.borders-separated-layer{
+			position:absolute;
+			height: 98%;
+			z-index: -1
+			background-color: none;
+		}
+
+		.borders-separated-el{
+			display:inline-block;
+			vertical-align:top;			
+			height: 100%;
+			border-right: 2px dotted  #222;
+			margin-right: -4px;	/* this seems to work - but why ??? */
+		}
+
+
+
+
+		h2 {
+			font-size: 13px;
+			line-height: 125%;
+			font-weight: bold;
+			padding: 0;
+			margin: 0;
+			margin-top: 2px;
+			margin-bottom: 2px;
+		}
+		p {
+			font-size: 12px;
+			line-height: 120%;
+			padding: 0;
+			margin: 0;
+			margin-bottom: 7px;
+
+			text-align: justify;
+		}
+
+
+		.debug-label{
+			display:inline-block;
+			position:absolute;
+			z-index: 100;
+			background-color:#fff;
+			border: 1px solid #000;
+			font-size:11px;
+			font-weight:normal;
+			padding: 1px 4px;
+			right:2px;
+			top:8px;
+			aavisibility: hidden;
+		}
+
+
+		h1, h2, .bl-h1, a {
+			color:orange;
+		}
+
+
