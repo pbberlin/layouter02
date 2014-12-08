@@ -29,18 +29,20 @@ const (
 	slimmest    = 4        // four rows - one col - eight rows - two cols
 )
 
-type amorph struct {
+type Amorph struct {
 	Nrows          int
 	Ncols          int
 	Slack          int
-	AestheticValue string //  100 - abs((ratio -  goldenRatio)*100) - string formatted %04d for generic sorting
+	AestheticValue string // 100 - abs((ratio -  goldenRatio)*100) - string formatted %04d for generic sorting
+	IdxArticle     int    // reference 'upward', since this type is also used in the 'matrix' later on
 }
 
 type ArticleAmorphified struct {
 	*ArticleBlockified // embedding
-	Amorphs            []*amorph
+	Amorphs            []*Amorph
 	AmorphsByAesth     []subsort.SortedByStringVal // leightweight, therefore no pointer
 	AmorphsBySlack     []subsort.SortedByIntVal
+	ArticleConsumed    bool // any of my morphs admitted into the layout?
 }
 
 var articlesAmorphified []ArticleAmorphified
@@ -69,7 +71,7 @@ func (a *ArticleAmorphified) amorphify() {
 			continue
 		}
 
-		a.Amorphs = append(a.Amorphs, new(amorph))
+		a.Amorphs = append(a.Amorphs, new(Amorph))
 		topAmorph := a.Amorphs[len(a.Amorphs)-1]
 		topAmorph.Ncols = cols
 		topAmorph.Slack = slack

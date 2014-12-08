@@ -1,0 +1,17 @@
+{{define "tplRepositoryOfAmorphs"}}
+<div class='blc'
+	style='
+		width:39%;
+		height:700px;
+		font-size:0px;
+		margin-right:40px;
+		overflow-y:scroll;
+		overflow-x:hidden;
+	'
+	tabindex='999'
+>
+	{{range $idxAmorph, $lpAmorph := .Amorphs }}
+		<div class='blc h{{.Nrows}} w{{.Ncols}} free' style='margin: 1px; '>No{{$idxAmorph}}</div> 
+	{{end}}
+</div>
+{{end}}

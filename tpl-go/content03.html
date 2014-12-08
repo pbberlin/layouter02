@@ -1,0 +1,55 @@
+{{define "tplContent"}}
+
+{{ fHTML .CSS1}}
+
+
+{{template "tplRepositoryOfAmorphs" . }}
+
+
+<div class='blc'
+	style='
+		width:{{.TotalGridWidth}}px;
+		height:{{.TotalGridHeight}}px;
+		background-image: url("/img/grid-gray.gif");
+		font-size:0px;
+	'
+	>
+
+	{{range $idxRow, $lpRow := .Layout1.M }}
+		{{range $idxCol, $lpSlot := $lpRow }}
+				
+				
+					
+				{{if   $lpSlot.IsLeftTop }}  
+
+
+					{{if $lpSlot.A}}  
+
+						<div class='blc pa t{{$idxRow}} l{{$idxCol}}  
+						h{{$lpSlot.A.Nrows}} w{{$lpSlot.A.Ncols}} free' 
+						style='background-color:#00c'
+						>
+							 AIdx{{$lpSlot.A.IdxArticle}}
+						</div> 
+
+
+					{{end}}
+
+					
+				{{else}} 
+					
+
+<!-- 					<div class='blc pa t{{$idxRow}} l{{$idxCol}}  h1 w1 free' >
+							#{{$idxRow}}:{{$idxCol}}
+					</div> 
+ -->					
+				{{end}}
+		{{end}}
+
+	{{end}}
+
+	<!-- <div aaclass='blc pa t5 l6    h4 w6 taken' style='opacity:0.7'>taken 01</div> -->
+
+
+</div>
+{{end}}

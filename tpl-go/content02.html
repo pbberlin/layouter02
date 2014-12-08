@@ -1,0 +1,41 @@
+{{define "tplContent"}}
+
+{{ fHTML .CSS1}}
+
+
+{{template "tplRepositoryOfAmorphs" . }}
+
+
+<div class='blc'
+	style='
+		width:800px;
+		height:700px;
+		background-image: url("/img/grid-gray.gif");
+		font-size:0px;
+	'
+	>
+	<div class='blc pa l6  t5  h4 w6 taken' style='opacity:0.7'>taken 01</div>
+
+
+	<div class='blc pa l6  t3  h2 w5 taken' >taken 02</div>
+	<div class='blc pa l4  t3  h9 w2 taken' style='opacity:0.3' >taken 03</div>
+
+
+	<div class='blc pa l0  t0  h0 w18 ' style='border: 2px dotted #f2f;'>border1 north</div>
+	<div class='blc pa l0  t0  h12 w0 ' style='border: 2px dotted #f2f;'>border1 west</div>
+
+	<div class='blc pa l1  t5  h0 w18 ' style='border: 2px dotted #a2a;'>border1 south</div>
+	<div class='blc pa l6  t1  h12 w0 ' style='border: 2px dotted #a2a;'>border1 east</div>
+
+	<div class='blc pa l1  t3  h0 w18 ' style='border: 2px dotted #a2a;'>border2 south</div>
+
+	<div class='blc pa l7  t11  h2 w10 ' style='padding: 8px;background-color: #cc2' >circle around - try to find a fit for each untaken "segment" - select the bestFit, first be fitting inwardly - then by forming the most even new outer border - 
+	variation: step out - towards the next larger border - having a longer straight line 
+	to dock on.<br>
+	Aproaching the constraining border - prefer reaching it perfectly - or leaving 2...4 spaces room for other elements
+	</div>
+
+
+
+</div>
+{{end}}

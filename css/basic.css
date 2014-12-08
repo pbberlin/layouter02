@@ -55,7 +55,7 @@
 		#vp-content {
 			text-align: center;
 			background-color: #ddd;
-			padding-bottom: 5em;  /* bottom padding for footer */
+			padding-bottom: 50px;  /* provide for overlapping max. footer height, remember: footer height grows auto  */
 		}
 		#vp-footer {
 			position:absolute;      /* relative to vp-container */

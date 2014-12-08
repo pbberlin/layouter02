@@ -1,36 +1,36 @@
+{{define "tplContent"}}
+
 {{ fHTML .CSS1}}
 
-<style>
-	.taken {
-		background-color: #a22;
-		opacity: 0.5;
-		text-align:center;
-		line-height:100px;
-	}
-	.free {
-		background-color: #2a2;
-		opacity: 0.5;
-		text-align:center;
-		line-height:100px;
-	}
-</style>
+
+{{template "tplRepositoryOfAmorphs" . }}
+
+
 
 <div class='blc'
 	style='
 		width:800px;
-		height:600px;
-		background-image: url("/img/bg.gif");
+		height:700px;
+		background-image: url("/img/grid-gray.gif");
 		font-size:0px;
 	'
-	>
-	<div class='blc h2 w2 free' >aa</div> 
-	<div class='blc h1 w2 taken'>bb</div>
-	<div class='blc h3 w3 free'>bb</div>
-	<div class='blc h2 w2 free'>aa</div> 
+>
+	<div class='blc pa l6  t5  h4 w6 taken' >taken 01</div>
 
-	{{range $idxAmorph, $lpAmorph := .Amorphs }}
-		<div class='blc h{{.Nrows}} w{{.Ncols}} free'>No{{$idxAmorph}}</div> 
-	{{end}}
+	<div class='blc pa l0  t11  h3 w2 taken' >taken 02</div>
+
+	<div class='blc pa l0  t0   h5  w20 slot' >slot -04</div>
+	<div class='blc pa l12  t0   h14  w8 slot' >slot -02</div>
+
+
+	<div class='blc pa l0  t0   h11 w6 slot' >slot 01</div>
+	<div class='blc pa l6  t0   h5  w14 slot' >slot 02</div>
+	<div class='blc pa l6  t9   h5  w14 slot' >slot 03</div>
+	<div class='blc pa l2  t11   h3  w4 slot' >slot 04</div>
+	<div class='blc pa l12  t5   h4  w8 slot' >slot 04</div>
+	<div class='blc pa l2  t9   h5  w18 slot' >slot 04</div>
+
 
 
 </div>
+{{end}}

@@ -3,10 +3,15 @@
 <head>
 	<meta charset="utf-8">
 	<link rel="icon" href="data:;base64,=">
-	<title>Backend</title>
-	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open Sans">	 
+	<title>{{.HeadTitle}}</title>
+	<!-- causes browser window page to remain blank, if at Starbucks WLAN is redirected to authentication page  -->
+
+	<!--
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open Sans">	  
+	-->
 	<link rel="stylesheet" href="/css/basic.css" media="screen" type="text/css" />
 	<link rel="stylesheet" href="/css/inline-block.css" media="screen" type="text/css" />
+	{{if  .HeadCSSLink }}{{fHTML .HeadCSSLink}}{{end}}
 </head>
 
 
@@ -18,8 +23,8 @@
 		{{fHTML .vpHeader.Msg}}
 	</div>
 
-	<div id='vp-content'>
-		<ng-view/>
+	<div id='vp-content' >
+		<ng-view />
 		{{template "tplContent" .vpContent }}
 	</div>  <!-- /vp-content -->
 

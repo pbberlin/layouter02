@@ -62,6 +62,14 @@ func backend(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "<a href='/tokenize-articles'  target='b_out'>Tokenize  Articles</a><br>\n")
 	io.WriteString(w, "--  <a href='/tokenized-show'   target='b_out'>Tokenized Show</a><br>\n")
 
+	io.WriteString(w, "--  <a href='/try-bin-pack'   target='b_out'>Binpack study 1</a><br>\n")
+	io.WriteString(w, `--  <a href='/try-bin-pack?tplName=base-01-ng&tplName=content02'   
+			target='b_out'>Binpack study 2</a><br>`+"\n")
+	io.WriteString(w, `--  <a href='/try-bin-pack?tplName=base-01-ng&tplName=content03'   
+			target='b_out'>Binpack - Random seeded</a><br>`+"\n")
+
+	io.WriteString(w, "--  <a href='/matrix-raw'     target='b_out'>Matrix raw</a><br>\n")
+
 	io.WriteString(w, "------------------------------------------<br>\n")
 	io.WriteString(w, "--  <a href='/pipeline-all'   target='b_out'  accesskey='p'><b>P</b>ipeline All</a><br>\n")
 }
@@ -75,7 +83,8 @@ func init() {
 	http.HandleFunc("/pipeline-all", pipelineAll)
 	http.HandleFunc("/backend", backend)
 
-	http.HandleFunc("/try-bin-pack", tryBinpack)
+	http.HandleFunc("/try-bin-pack", tryBinpack01)
+	http.HandleFunc("/matrix-raw", matrixRaw)
 
 	pf("http server init complete\n")
 }

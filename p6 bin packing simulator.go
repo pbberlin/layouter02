@@ -7,51 +7,61 @@ import (
 	"net/http"
 )
 
-const nArmorphs = 20
+const (
+	numExampleAmorphs = 20 // randomly created, for exercise and study
+	gridWidth         = 40
+	gridHeight        = 50
 
-type amorph1 struct {
-	amorph
-	consumed int
-}
+	gridRows = 14
+	gridCols = 20
 
-var rndAmorphs []amorph1 = make([]amorph1, nArmorphs)
+	TotalGridWidth  = gridWidth * gridCols
+	TotalGridHeight = gridHeight * gridRows
+)
 
-func generateRandomamorph1s() {
+var AmorphsRandom []Amorph = make([]Amorph, numExampleAmorphs)
 
-	for i := 0; i < nArmorphs; i++ {
-		lp := &rndAmorphs[i]
+func generateRandomAmorphs() {
+
+	for i := 0; i < numExampleAmorphs; i++ {
+		lp := &AmorphsRandom[i]
 		lp.Nrows = 1 + rand.Intn(3)
 		lp.Ncols = 1 + rand.Intn(3)
 		if rand.Intn(4) > 2 {
 			lp.Nrows = 2 + rand.Intn(6)
 			lp.Ncols = 2 + rand.Intn(6)
 		}
+		lp.IdxArticle = i
 	}
 
 }
 
 func generateCSS1() string {
 	s := ""
-	for i := 0; i < 10; i++ {
-		s += spf("	.h%v {height:%vpx;}  .w%v { width:%vpx;} \n", i, 100*i, i, 80*i)
+	for i := 0; i < 30; i++ {
+		s += spf("	.h%v {height:%vpx;}  .w%v { width:%vpx;} \n", i, gridHeight*i,
+			i, gridWidth*i)
+		s += spf("	.t%v {top:%vpx;}  .l%v { left:%vpx;} \n", i, gridHeight*i,
+			i, gridWidth*i)
+
 	}
 	return "<style>" + s + "</style>"
 }
 
 func init() {
-	generateRandomamorph1s()
-	// s := util.IndentedDump(rndAmorphs)
-	// pf("%v", *s)
+	generateRandomAmorphs()
 }
 
-func tryBinpack(w http.ResponseWriter, r *http.Request) {
-	data := map[string]map[string]interface{}{}
+func tryBinpack01(w http.ResponseWriter, r *http.Request) {
+	data := map[string]interface{}{}
 	hdr := map[string]interface{}{"Msg": "this is header"}
 	ftr := map[string]interface{}{"Msg": "this is footer"}
 	cnt := map[string]interface{}{"Msg": "content Msg"}
 	data["vpHeader"] = hdr
 	data["vpFooter"] = ftr
 	data["vpContent"] = cnt
+	data["HeadCSSLink"] = `<link rel="stylesheet" href="/css/bin-pack-grid.css" media="screen" type="text/css" />`
+	data["HeadTitle"] = `Bin packing study`
 
 	dataContent, err := ioutil.ReadFile("tpl-go/content01.html")
 	if err != nil {
@@ -59,10 +69,13 @@ func tryBinpack(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tplContent := `{{define "tplContent"}}` + string(dataContent) + `{{end}}`
-	data["vpContent"]["Msg"] = "some Msg"
-	data["vpContent"]["Amorphs"] = rndAmorphs
-	data["vpContent"]["CSS1"] = generateCSS1()
+	tplContent := string(dataContent)
+	cnt["Msg"] = "some Msg"
+	cnt["Amorphs"] = AmorphsRandom
+	cnt["Layout1"] = L1
+	cnt["TotalGridWidth"] = TotalGridWidth
+	cnt["TotalGridHeight"] = TotalGridHeight
+	cnt["CSS1"] = generateCSS1()
 
-	renderTemplate(w, r, []string{"empty-ng-page.html", tplContent}, data)
+	renderTemplate(w, r, []string{"base-01-ng", tplContent, "repository-of-amorphs"}, data)
 }
