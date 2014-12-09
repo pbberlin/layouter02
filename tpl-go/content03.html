@@ -48,7 +48,12 @@
 
 	{{end}}
 
-	<!-- <div aaclass='blc pa t5 l6    h4 w6 taken' style='opacity:0.7'>taken 01</div> -->
+	<div class='blc pa t0 l{{.Layout1.West}}'  style='width:2px;height:{{.TotalGridHeight}}px;background-color:#f22;'>west</div>
+	<div class='blc pa t0 l{{.Layout1.East}}'  style='width:2px;height:{{.TotalGridHeight}}px;background-color:#f22;'>east</div>
+
+	<div class='blc pa t{{.Layout1.North}} l0' style='height:2px;width:{{.TotalGridWidth}}px;background-color:#f22;'>north</div>
+	<div class='blc pa t{{.Layout1.South}} l0' style='height:2px;width:{{.TotalGridWidth}}px;background-color:#f22;'>south</div>
+
 
 
 </div>
