@@ -15,6 +15,9 @@
 	'
 	>
 
+	<div class='blc pa t0 l{{.Layout1.CCol}}'  style='width: 6px;height:{{.TotalGridHeight}}px;background-color:#c88;margin-left:-3px'>Vert</div>
+	<div class='blc pa t{{.Layout1.CRow}} l0'  style='height:6px;width:{{.TotalGridWidth}}px;  background-color:#c88;margin-top:-3px'>Hori</div>
+
 	{{range $idxRow, $lpRow := .Layout1.M }}
 		{{range $idxCol, $lpSlot := $lpRow }}
 				
@@ -53,6 +56,13 @@
 
 	<div class='blc pa t{{.Layout1.North}} l0' style='height:2px;width:{{.TotalGridWidth}}px;background-color:#f22;'>north</div>
 	<div class='blc pa t{{.Layout1.South}} l0' style='height:2px;width:{{.TotalGridWidth}}px;background-color:#f22;'>south</div>
+
+
+	<div class='blc pa t0 l{{.Layout1.IWest}}'  style='width:1px;height:{{.TotalGridHeight}}px;background-color:#ff2;'>&nbsp; &nbsp; iw</div>
+	<div class='blc pa t0 l{{.Layout1.IEast}}'  style='width:1px;height:{{.TotalGridHeight}}px;background-color:#ff2;'>&nbsp; &nbsp; &nbsp; ie</div>
+
+	<div class='blc pa t{{.Layout1.INorth}} l0' style='height:1px;width:{{.TotalGridWidth}}px;background-color:#ff2;'>&nbsp; &nbsp; &nbsp; &nbsp; in</div>
+	<div class='blc pa t{{.Layout1.ISouth}} l0' style='height:1px;width:{{.TotalGridWidth}}px;background-color:#ff2;'>&nbsp; &nbsp; &nbsp; &nbsp; is</div>
 
 
 

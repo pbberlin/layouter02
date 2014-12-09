@@ -37,6 +37,19 @@ func tokenizedShow(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, *s)
 }
 
+func regenerateRandomAmorphs(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	generateRandomAmorphs()
+
+	L1.Init()
+	L1.Seed()
+	L1.Delimit()
+
+	io.WriteString(w, "result of randomized amorps ... \n\n")
+	s := util.IndentedDump(AmorphsRandom)
+	io.WriteString(w, *s)
+}
+
 //--------------------------------------
 func pipelineAll(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "doing it all ... \n\n")
@@ -61,6 +74,7 @@ func backend(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "<a href='/randomize-articles' target='b_out'>Randomize Articles</a><br>\n")
 	io.WriteString(w, "<a href='/tokenize-articles'  target='b_out'>Tokenize  Articles</a><br>\n")
 	io.WriteString(w, "--  <a href='/tokenized-show'   target='b_out'>Tokenized Show</a><br>\n")
+	io.WriteString(w, "--  <a href='/regenerate-random-amorphs'   target='b_out'>Randomized Amorphs regenerate</a><br>\n")
 
 	io.WriteString(w, "--  <a href='/try-bin-pack'   target='b_out'>Binpack study 1</a><br>\n")
 	io.WriteString(w, `--  <a href='/try-bin-pack?tplName=base-01-ng&tplName=content02'   
@@ -79,6 +93,7 @@ func init() {
 	http.HandleFunc("/randomize-articles", randomizeArticles)
 	http.HandleFunc("/tokenize-articles", tokenizeArticles)
 	http.HandleFunc("/tokenized-show", tokenizedShow)
+	http.HandleFunc("/regenerate-random-amorphs", regenerateRandomAmorphs)
 
 	http.HandleFunc("/pipeline-all", pipelineAll)
 	http.HandleFunc("/backend", backend)

@@ -15,8 +15,10 @@ type Slot struct {
 type Matrix [][]Slot
 
 type Layout struct {
-	M                        Matrix
-	West, South, East, North int
+	M                            Matrix
+	CRow, CCol                   int // center row, center column
+	West, South, East, North     int // outer border of inscribed amorphs
+	IWest, ISouth, IEast, INorth int // inner border of inscribed amorphs
 }
 
 var L1 Layout
@@ -28,16 +30,40 @@ func (l *Layout) Init() {
 	}
 	l.M = newM
 
+	l.CRow = len(l.M) / 2
+	l.CCol = len(l.M[0]) / 2
+
 }
 
 // Plaster some randomly generated amorphs onto the layout
 func (l *Layout) Seed() {
+
 	seeds := 3
-	lastColPos := 5
 
 	for i := 0; i < seeds; i++ {
-		L1.Plaster(&AmorphsRandom[i], 5, lastColPos)
-		lastColPos += AmorphsRandom[i].Ncols + 1
+		AmorphsRandom[i].Nrows++
+		AmorphsRandom[i].Ncols++
+	}
+
+	if AmorphsRandom[1].Nrows < AmorphsRandom[0].Nrows {
+		AmorphsRandom[1].Nrows = AmorphsRandom[0].Nrows + 1
+	}
+
+	if AmorphsRandom[1].Ncols < 2 {
+		AmorphsRandom[1].Ncols = 2
+	}
+
+	if AmorphsRandom[2].Nrows < AmorphsRandom[3].Nrows {
+		AmorphsRandom[2].Nrows = AmorphsRandom[3].Nrows + 1
+	}
+
+	lastRowPos := l.CRow
+	lastColPos := l.CCol - AmorphsRandom[0].Ncols - AmorphsRandom[1].Ncols/2
+
+	for i := 0; i < seeds; i++ {
+		L1.Plaster(&AmorphsRandom[i], lastRowPos-AmorphsRandom[i].Nrows/2, lastColPos)
+		// lastColPos += AmorphsRandom[i].Ncols + 1
+		lastColPos += AmorphsRandom[i].Ncols
 	}
 }
 
@@ -85,6 +111,37 @@ func (l *Layout) Delimit() {
 	l.East = e + 1
 	l.North = n
 	l.South = s + 1
+
+	iw := w
+	ie := e
+	in := n
+	is := s
+	for row := n; row < s+1; row++ {
+		for col := w; col < e+1; col++ {
+			if l.M[row][col].A == nil {
+				if col >= iw && col <= l.CCol {
+					iw = col + 1
+				}
+				if col <= ie && col >= l.CCol {
+					ie = col - 1
+				}
+
+				if row >= in && row < l.CRow {
+					in = row + 1
+					// pf("%v %v %v\n", row, col, is)
+				}
+				if row <= is && row > l.CRow {
+					is = row - 1
+					// pf("%v %v %v\n", row, col, is)
+				}
+			}
+		}
+	}
+	l.IWest = iw
+	l.IEast = ie + 1
+
+	l.INorth = in
+	l.ISouth = is + 1
 
 }
 
