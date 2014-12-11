@@ -65,6 +65,40 @@
 	<div class='blc pa t{{.Layout1.ISouth}} l0' style='height:1px;width:{{.TotalGridWidth}}px;background-color:#ff2;'>&nbsp; &nbsp; &nbsp; &nbsp; is</div>
 
 
+	<div class='blc pa l7  t11 w12 ' style='white-space:pre; line-height:15px;;height: auto; 
+		padding: 4px;background-color: #cc2' 
+>1. circle around
+2. concentrate on either entire sides, or mere corners, or divide into sub-spaces
+3. permutate all amorphs
+4. preference a: prefer those fitting into cavities (min interior cavities)
+5. preference b: minimize exterior cavities - longest even line
+5b.   give special penalty for deep external cavities
+6. prefer amorphs, which "snap to" outer limit
+6b. penalize small external cavities at outer limit
+	</div>
+
+	{{range $idxLine, $lpLine := .Layout1.Outline }}
+		{{if $lpLine.Vert }}
+			<!--up or down-->
+			<div class='blc pa t{{$lpLine.DrawRow}} l{{$lpLine.DrawCol}}
+					h{{$lpLine.Length}}
+				' 
+				style='width:4px;background-color:#f2f;'  
+			>  {{$idxLine}}
+			</div>
+		{{else}}
+			<div class='blc pa t{{$lpLine.DrawRow}} l{{$lpLine.DrawCol}}
+					w{{$lpLine.Length}}
+				' 
+				style='height:4px;background-color:#f2f;'  
+			>  {{$idxLine}}
+			</div>
+		{{end}}
+
+		
+
+	{{end}}
+
 
 </div>
 {{end}}

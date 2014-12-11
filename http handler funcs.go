@@ -44,6 +44,7 @@ func regenerateRandomAmorphs(w http.ResponseWriter, r *http.Request) {
 	L1.Init()
 	L1.Seed()
 	L1.Delimit()
+	L1.OutlineDraw()
 
 	io.WriteString(w, "result of randomized amorps ... \n\n")
 	s := util.IndentedDump(AmorphsRandom)
