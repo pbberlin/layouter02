@@ -7,7 +7,6 @@ package main
 
 import (
 	"io"
-	"math/rand"
 	"net/http"
 
 	"github.com/pbberlin/tools/util"
@@ -38,6 +37,36 @@ type Layout struct {
 	West, South, East, North     int // outer border of inscribed amorphs
 	IWest, ISouth, IEast, INorth int // inner border of inscribed amorphs
 	Outline                      []Line
+	OutlineConcavity             bool
+}
+
+func (l *Layout) CheckConcavity() {
+	curTrend := jsonDirection(0)
+	alternations := 0
+	for i := 0; i < len(l.Outline); i++ {
+		if l.Outline[i].Direction == RIGHT || l.Outline[i].Direction == LEFT {
+			// nothing
+		}
+		if l.Outline[i].Direction == UP || l.Outline[i].Direction == DOWN {
+			lpDir := jsonDirection(l.Outline[i].Direction)
+			if curTrend == jsonDirection(0) { // first trend
+				curTrend = lpDir
+				continue
+			}
+			if curTrend == lpDir {
+				// fine
+			}
+			if curTrend != lpDir {
+				curTrend = lpDir
+				alternations++
+			}
+		}
+	}
+	l.OutlineConcavity = false
+	if alternations > 1 {
+		l.OutlineConcavity = true
+	}
+
 }
 
 var L1 Layout
@@ -57,34 +86,17 @@ func (l *Layout) Init() {
 // Plaster some randomly generated amorphs onto the layout
 func (l *Layout) Seed() {
 
-	seeds := 3
+	seeds := 4
 
-	if AmorphsRandom[1].Nrows < 2 {
-		AmorphsRandom[1].Nrows = 2 + rand.Intn(4)
-	}
-	if AmorphsRandom[1].Ncols < 2 {
-		AmorphsRandom[1].Ncols = 2 + rand.Intn(4)
-	}
-
-	// for i := 0; i < seeds; i++ {
-	// 	AmorphsRandom[i].Nrows++
-	// 	AmorphsRandom[i].Ncols++
+	// if AmorphsRandom[1].Nrows < 2 {
+	// 	AmorphsRandom[1].Nrows = 2 + rand.Intn(4)
 	// }
-
-	// if AmorphsRandom[1].Nrows < AmorphsRandom[0].Nrows {
-	// 	AmorphsRandom[1].Nrows = 1 + rand.Intn(5)
-	// }
-
 	// if AmorphsRandom[1].Ncols < 2 {
-	// 	AmorphsRandom[1].Ncols = 2 + rand.Intn(5)
-	// }
-
-	// if AmorphsRandom[2].Nrows < AmorphsRandom[3].Nrows {
-	// 	AmorphsRandom[2].Nrows = AmorphsRandom[3].Nrows + rand.Intn(4)
+	// 	AmorphsRandom[1].Ncols = 2 + rand.Intn(4)
 	// }
 
 	lastRowPos := l.CRow
-	lastColPos := l.CCol - AmorphsRandom[0].Ncols - AmorphsRandom[1].Ncols/2
+	lastColPos := l.CCol - AmorphsRandom[0].Ncols - AmorphsRandom[1].Ncols
 
 	for i := 0; i < seeds; i++ {
 		L1.Plaster(&AmorphsRandom[i], lastRowPos-AmorphsRandom[i].Nrows/2, lastColPos)
@@ -171,127 +183,6 @@ func (l *Layout) Delimit() {
 
 }
 
-const (
-	_ = iota // ignore first value by assigning to blank identifier
-	UP
-	DOWN
-	LEFT
-	RIGHT
-)
-
-type Line struct {
-	Row1, Col1, Row2, Col2 int
-	DrawRow, DrawCol       int  // left-top for HTML rendering
-	Vert                   bool // vertical or horizonal - for HTML rendering
-	Length                 int
-}
-
-func (l *Layout) OutlineDraw() {
-
-	// init
-	var (
-		direction, prev int
-		line            = Line{}
-	)
-
-	// init position
-	row := l.CRow
-	col := l.West
-	l.Outline = make([]Line, 0)
-
-	// init line
-	line.Row1 = row
-	line.Col1 = col
-	pf("outls rowcol: %v %v\n", row, col)
-
-	// init direction
-	if l.M.Filled(row-1, col) {
-		direction, prev = UP, UP
-		row--
-	} else {
-		direction, prev = RIGHT, RIGHT
-		col++
-	}
-	pf("dir%v  rowcol: %v %v\n", direction, row, col)
-
-	cntr := 0
-	for {
-
-		if direction == UP {
-			// pf("%b --", !l.M.Filled(row-1, col))
-			if !l.M.Filled(row-1, col) { // checking northeast
-				direction = RIGHT
-			}
-		} else if direction == DOWN {
-			if l.M.Filled(row, col) { // checking southheast
-				direction = RIGHT
-			}
-		} else if direction == RIGHT {
-			if l.M.Filled(row-1, col) { // checking northeast
-				direction = UP
-			} else if !l.M.Filled(row, col) { // checking southheast
-				direction = DOWN
-			}
-		}
-
-		if direction != prev {
-			line = l.completeAndAppend(line, row, col)
-		}
-
-		if direction == UP {
-			row--
-		}
-		if direction == DOWN {
-			row++
-		}
-		if direction == RIGHT {
-			col++
-		}
-
-		prev = direction
-
-		pf("dir%v  rowcol: %v %v\n", direction, row, col)
-
-		cntr++
-		if col > l.East || row > l.CRow || cntr > 40 {
-			line = l.completeAndAppend(line, row, col)
-			break
-		}
-	}
-
-}
-
-func (l *Layout) completeAndAppend(line Line, row, col int) (newLine Line) {
-
-	// complete line and append it
-	line.Row2 = row
-	line.Col2 = col
-
-	line.Length = util.Abs(line.Col2 - line.Col1)
-	if line.Col2 == line.Col1 {
-		line.Vert = true
-		line.Length = util.Abs(line.Row2 - line.Row1)
-	}
-
-	line.DrawRow = line.Row1
-	if line.Row2 < line.Row1 {
-		line.DrawRow = line.Row2
-	}
-
-	line.DrawCol = line.Col1
-	if line.Col2 < line.Col1 {
-		line.DrawCol = line.Col2
-	}
-
-	l.Outline = append(l.Outline, line)
-
-	newLine.Row1 = row
-	newLine.Col1 = col
-
-	pf("  line closed %v\n", line)
-	return
-}
-
 func matrixRaw(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	io.WriteString(w, "showing current (layout) matrix \n\n")
@@ -299,11 +190,18 @@ func matrixRaw(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, *s2)
 }
 
-func init() {
+func layoutPipeline() {
 	L1.Init()
 	L1.Seed()
 	// L1.Plaster(&AmorphsRandom[0], 7, 8)
 	// L1.Plaster(&AmorphsRandom[1], 7, 12)
 	L1.Delimit()
-	L1.OutlineDraw()
+	L1.OutlineDrawN()
+	L1.OutlineDrawS()
+	L1.CheckConcavity()
+
+}
+
+func init() {
+	layoutPipeline()
 }
