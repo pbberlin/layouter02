@@ -52,7 +52,12 @@ func (l *Layout) completeAndAppend(NorthOrSouth bool, line Line, direction, row,
 	newLine.Col1 = col
 
 	// mere dots originate in init loop of drawOutlineX() - skip those:
-	if line.Col1 == line.Col2 && line.Row1 == line.Row2 {
+	// if line.Col1 == line.Col2 && line.Row1 == line.Row2 {
+	// 	return
+	// }
+
+	// init loop => skip
+	if direction == 0 {
 		return
 	}
 

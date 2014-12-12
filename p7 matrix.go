@@ -25,9 +25,9 @@ type Layout struct {
 	West, South, East, North     int // outer border of inscribed amorphs
 	IWest, ISouth, IEast, INorth int // inner border of inscribed amorphs
 	OutlineN                     []Line
-	OutlineNConcavity            bool
 	OutlineS                     []Line
-	OutlineSConcavity            bool
+	ConcavitiesN                 []Line
+	ConcavitiesS                 []Line
 }
 
 var L1 Layout
@@ -42,35 +42,6 @@ func (pm *Matrix) Filled(row, col int) bool {
 		return false
 	}
 	return true
-}
-
-func (l *Layout) CheckConcavity() {
-	curTrend := jsonDirection(0)
-	alternations := 0
-	for i := 0; i < len(l.OutlineN); i++ {
-		if l.OutlineN[i].Direction == RIGHT || l.OutlineN[i].Direction == LEFT {
-			// nothing
-		}
-		if l.OutlineN[i].Direction == UP || l.OutlineN[i].Direction == DOWN {
-			lpDir := jsonDirection(l.OutlineN[i].Direction)
-			if curTrend == jsonDirection(0) { // first trend
-				curTrend = lpDir
-				continue
-			}
-			if curTrend == lpDir {
-				// fine
-			}
-			if curTrend != lpDir {
-				curTrend = lpDir
-				alternations++
-			}
-		}
-	}
-	l.OutlineNConcavity = false
-	if alternations > 1 {
-		l.OutlineNConcavity = true
-	}
-
 }
 
 func (l *Layout) Init() {
@@ -223,7 +194,8 @@ func layoutPipeline() {
 		L1.OutlineN[0] = combiLine    // replace
 		L1.OutlineS = L1.OutlineS[1:] // remove
 	}
-	L1.CheckConcavity()
+	L1.CheckConcavityN()
+	L1.CheckConcavityS()
 }
 
 func init() {
