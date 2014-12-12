@@ -2,75 +2,50 @@ package main
 
 func (l *Layout) OutlineNDraw() {
 
-	// init
-	var (
-		direction, prev int
-		line            = Line{}
-	)
-
-	// init position
-	row := l.CRow
-	col := l.West
 	l.OutlineN = make([]Line, 0)
 
-	// init line
-	line.Row1 = row
-	line.Col1 = col
-	//pf("outls rowcol: %v %v\n", row, col)
+	row := l.CRow
+	col := l.West
+	dir := 0
+	prev := 0
+	line := Line{Row1: row, Col1: col}
 
-	// init direction
-	if l.M.Filled(row-1, col) {
-		direction, prev = UP, UP
-		row--
-	} else {
-		direction, prev = RIGHT, RIGHT
-		col++
-	}
-	//pf("dir%v  rowcol: %v %v\n", direction, row, col)
-
-	cntr := 0
 	for {
 
-		if direction == UP {
-			if !l.M.Filled(row-1, col) { // checking northeast
-				direction = RIGHT
-			}
-		} else if direction == DOWN {
-			if l.M.Filled(row, col) { // checking southheast
-				direction = RIGHT
-			}
-		} else if direction == RIGHT {
-			if l.M.Filled(row-1, col) { // checking northeast
-				direction = UP
-			} else if !l.M.Filled(row, col) { // checking southheast
-				direction = DOWN
-			}
+		northEast := l.M.Filled(row-1, col)
+		southEast := l.M.Filled(row, col)
+		chCol := 0
+		chRow := 0
+
+		switch {
+		case northEast:
+			chRow = -1
+			dir = UP
+		case southEast && !northEast:
+			chCol = 1
+			dir = RIGHT
+		case !northEast && !southEast:
+			chRow = 1
+			dir = DOWN
 		}
 
-		if direction != prev {
+		if prev != dir {
+			line.Row2 = row
+			line.Col2 = col
 			line = l.completeAndAppend(true, line, prev, row, col)
 		}
 
-		if direction == UP {
-			row--
-		}
-		if direction == DOWN {
-			row++
-		}
-		if direction == RIGHT {
-			col++
-		}
+		row += chRow
+		col += chCol
+		prev = dir
+		// pf("n: dir%8s  rowcol: %v %v\n", jsonDirection(dir), row, col)
 
-		// pf("dir%v  rowcol: %v %v\n", direction, row, col)
-
-		cntr++
-		if col > l.East || row > l.CRow || cntr > 40 {
+		// final condition
+		emptySouthWest := col == l.East && !l.M.Filled(row, col-1)
+		if emptySouthWest {
 			line = l.completeAndAppend(true, line, prev, row, col)
 			break
 		}
-
-		prev = direction
-
 	}
 
 }

@@ -18,19 +18,18 @@ func (l *Layout) OutlineSDraw() {
 		chRow := 0
 
 		switch {
-		case northEast && !southEast:
-			chCol = 1
-			dir = RIGHT
 		case southEast:
 			chRow = 1
 			dir = DOWN
+		case northEast && !southEast:
+			chCol = 1
+			dir = RIGHT
 		case !northEast && !southEast:
 			chRow = -1
 			dir = UP
 		}
 
 		if prev != dir {
-			// pf("  line finalized %v %v\n", prev, dir)
 			line.Row2 = row
 			line.Col2 = col
 			line = l.completeAndAppend(false, line, prev, row, col)
@@ -39,11 +38,11 @@ func (l *Layout) OutlineSDraw() {
 		row += chRow
 		col += chCol
 		prev = dir
-		pf("dir%8s  rowcol: %v %v\n", jsonDirection(dir), row, col)
+		// pf("s: dir%8s  rowcol: %v %v\n", jsonDirection(dir), row, col)
 
 		// final condition
 		emptyNorthWest := col == l.East && !l.M.Filled(row-1, col-1)
-		if emptyNorthWest || row > l.South || row <= l.North || col > l.East {
+		if emptyNorthWest {
 			line = l.completeAndAppend(false, line, prev, row, col)
 			break
 		}

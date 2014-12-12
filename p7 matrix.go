@@ -200,6 +200,29 @@ func layoutPipeline() {
 	L1.Delimit()
 	L1.OutlineNDraw()
 	L1.OutlineSDraw()
+
+	// cut off last, line element - it's doubly
+	L1.OutlineN = L1.OutlineN[:len(L1.OutlineN)-1]
+
+	// now combine the first elements from both outlines into one
+	n1 := L1.OutlineN[0]
+	s1 := L1.OutlineS[0]
+	if n1.Direction == jsonDirection(UP) &&
+		s1.Direction == jsonDirection(DOWN) &&
+		s1.Col1 == n1.Col1 {
+		combiLine := Line{}
+		combiLine.Row1 = s1.Row2
+		combiLine.Col1 = s1.Col2
+		combiLine.Row2 = n1.Row2
+		combiLine.Col2 = n1.Col2
+		combiLine.Direction = jsonDirection(UP)
+		combiLine.DrawRow = n1.Row2
+		combiLine.DrawCol = n1.Col2
+		combiLine.Vert = true
+		combiLine.Length = combiLine.Row1 - combiLine.Row2
+		L1.OutlineN[0] = combiLine    // replace
+		L1.OutlineS = L1.OutlineS[1:] // remove
+	}
 	L1.CheckConcavity()
 }
 
