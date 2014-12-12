@@ -77,7 +77,7 @@
 6b. penalize small external cavities at outer limit
 	</div>
 
-	{{range $idxLine, $lpLine := .Layout1.Outline }}
+	{{range $idxLine, $lpLine := .Layout1.OutlineN }}
 		{{if $lpLine.Vert }}
 			<!--up or down-->
 			<div class='blc pa t{{$lpLine.DrawRow}} l{{$lpLine.DrawCol}}
@@ -94,11 +94,28 @@
 			>  {{$idxLine}}
 			</div>
 		{{end}}
-
-		
-
 	{{end}}
 
+
+
+	{{range $idxLine, $lpLine := .Layout1.OutlineS }}
+		{{if $lpLine.Vert }}
+			<!--up or down-->
+			<div class='blc pa t{{$lpLine.DrawRow}} l{{$lpLine.DrawCol}}
+					h{{$lpLine.Length}}
+				' 
+				style='width:4px;background-color:#a0a;'  
+			>  {{$idxLine}}
+			</div>
+		{{else}}
+			<div class='blc pa t{{$lpLine.DrawRow}} l{{$lpLine.DrawCol}}
+					w{{$lpLine.Length}}
+				' 
+				style='height:4px;background-color:#a0a;'  
+			>  {{$idxLine}}
+			</div>
+		{{end}}
+	{{end}}
 
 </div>
 {{end}}

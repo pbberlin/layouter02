@@ -1,6 +1,6 @@
 package main
 
-func (l *Layout) OutlineDrawN() {
+func (l *Layout) OutlineNDraw() {
 
 	// init
 	var (
@@ -11,12 +11,12 @@ func (l *Layout) OutlineDrawN() {
 	// init position
 	row := l.CRow
 	col := l.West
-	l.Outline = make([]Line, 0)
+	l.OutlineN = make([]Line, 0)
 
 	// init line
 	line.Row1 = row
 	line.Col1 = col
-	pf("outls rowcol: %v %v\n", row, col)
+	//pf("outls rowcol: %v %v\n", row, col)
 
 	// init direction
 	if l.M.Filled(row-1, col) {
@@ -26,13 +26,12 @@ func (l *Layout) OutlineDrawN() {
 		direction, prev = RIGHT, RIGHT
 		col++
 	}
-	pf("dir%v  rowcol: %v %v\n", direction, row, col)
+	//pf("dir%v  rowcol: %v %v\n", direction, row, col)
 
 	cntr := 0
 	for {
 
 		if direction == UP {
-			// pf("%b --", !l.M.Filled(row-1, col))
 			if !l.M.Filled(row-1, col) { // checking northeast
 				direction = RIGHT
 			}
@@ -49,7 +48,7 @@ func (l *Layout) OutlineDrawN() {
 		}
 
 		if direction != prev {
-			line = l.completeAndAppend(line, prev, row, col)
+			line = l.completeAndAppend(true, line, prev, row, col)
 		}
 
 		if direction == UP {
@@ -66,7 +65,7 @@ func (l *Layout) OutlineDrawN() {
 
 		cntr++
 		if col > l.East || row > l.CRow || cntr > 40 {
-			line = l.completeAndAppend(line, prev, row, col)
+			line = l.completeAndAppend(true, line, prev, row, col)
 			break
 		}
 

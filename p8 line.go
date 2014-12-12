@@ -37,12 +37,24 @@ func (d jsonDirection) MarshalJSON() ([]byte, error) {
 
 	return []byte(`"` + s + `"`), nil
 }
+func (d jsonDirection) String() string {
+	b, _ := d.MarshalJSON()
+	return string(b)
+}
+func (l *Layout) completeAndAppend(NorthOrSouth bool, line Line, direction, row, col int) (newLine Line) {
 
-func (l *Layout) completeAndAppend(line Line, direction, row, col int) (newLine Line) {
-
-	// complete line and append it
+	// complete old line
 	line.Row2 = row
 	line.Col2 = col
+
+	// start init new line
+	newLine.Row1 = row
+	newLine.Col1 = col
+
+	// mere dots originate in init loop of drawOutlineX() - skip those:
+	if line.Col1 == line.Col2 && line.Row1 == line.Row2 {
+		return
+	}
 
 	line.Direction = jsonDirection(direction)
 
@@ -62,10 +74,11 @@ func (l *Layout) completeAndAppend(line Line, direction, row, col int) (newLine 
 		line.DrawCol = line.Col2
 	}
 
-	l.Outline = append(l.Outline, line)
-
-	newLine.Row1 = row
-	newLine.Col1 = col
+	if NorthOrSouth {
+		l.OutlineN = append(l.OutlineN, line)
+	} else {
+		l.OutlineS = append(l.OutlineS, line)
+	}
 
 	// pf("  line closed %v\n", line)
 	return

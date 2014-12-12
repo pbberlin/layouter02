@@ -19,10 +19,23 @@ type Slot struct {
 
 type Matrix [][]Slot
 
+type Layout struct {
+	M                            Matrix
+	CRow, CCol                   int // center row, center column
+	West, South, East, North     int // outer border of inscribed amorphs
+	IWest, ISouth, IEast, INorth int // inner border of inscribed amorphs
+	OutlineN                     []Line
+	OutlineNConcavity            bool
+	OutlineS                     []Line
+	OutlineSConcavity            bool
+}
+
+var L1 Layout
+
 func (pm *Matrix) Filled(row, col int) bool {
 	m := *pm
 	// pf("---%v %v\n", row, col)
-	if row < 0 || col < 0 || row > len(m)-1 || col > len(m[row])-1 { // beyound slice boundary => for outline drawing this means not filled
+	if row < 0 || col < 0 || row > len(m)-1 || col > len(m[row])-1 { // beyound slice boundary => for OutlineN drawing this means not filled
 		return false
 	}
 	if m[row][col].A == nil {
@@ -31,24 +44,15 @@ func (pm *Matrix) Filled(row, col int) bool {
 	return true
 }
 
-type Layout struct {
-	M                            Matrix
-	CRow, CCol                   int // center row, center column
-	West, South, East, North     int // outer border of inscribed amorphs
-	IWest, ISouth, IEast, INorth int // inner border of inscribed amorphs
-	Outline                      []Line
-	OutlineConcavity             bool
-}
-
 func (l *Layout) CheckConcavity() {
 	curTrend := jsonDirection(0)
 	alternations := 0
-	for i := 0; i < len(l.Outline); i++ {
-		if l.Outline[i].Direction == RIGHT || l.Outline[i].Direction == LEFT {
+	for i := 0; i < len(l.OutlineN); i++ {
+		if l.OutlineN[i].Direction == RIGHT || l.OutlineN[i].Direction == LEFT {
 			// nothing
 		}
-		if l.Outline[i].Direction == UP || l.Outline[i].Direction == DOWN {
-			lpDir := jsonDirection(l.Outline[i].Direction)
+		if l.OutlineN[i].Direction == UP || l.OutlineN[i].Direction == DOWN {
+			lpDir := jsonDirection(l.OutlineN[i].Direction)
 			if curTrend == jsonDirection(0) { // first trend
 				curTrend = lpDir
 				continue
@@ -62,14 +66,12 @@ func (l *Layout) CheckConcavity() {
 			}
 		}
 	}
-	l.OutlineConcavity = false
+	l.OutlineNConcavity = false
 	if alternations > 1 {
-		l.OutlineConcavity = true
+		l.OutlineNConcavity = true
 	}
 
 }
-
-var L1 Layout
 
 func (l *Layout) Init() {
 	newM := make([][]Slot, gridRows) // top-left; rows-cols; x=> rows, y=> cols, *not* Ordinate/Abszisse convention
@@ -196,10 +198,9 @@ func layoutPipeline() {
 	// L1.Plaster(&AmorphsRandom[0], 7, 8)
 	// L1.Plaster(&AmorphsRandom[1], 7, 12)
 	L1.Delimit()
-	L1.OutlineDrawN()
-	L1.OutlineDrawS()
+	L1.OutlineNDraw()
+	L1.OutlineSDraw()
 	L1.CheckConcavity()
-
 }
 
 func init() {
