@@ -72,7 +72,9 @@ func backend(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "<a href='/randomize-articles' target='b_out'>Randomize Articles</a><br>\n")
 	io.WriteString(w, "<a href='/tokenize-articles'  target='b_out'>Tokenize  Articles</a><br>\n")
 	io.WriteString(w, "--  <a href='/tokenized-show'   target='b_out'>Tokenized Show</a><br>\n")
-	io.WriteString(w, "--  <a href='/regenerate-random-amorphs'   target='b_out'>Randomized Amorphs regenerate</a><br>\n")
+
+	io.WriteString(w, "--  <a href='/pipeline-all'   target='b_out'  accesskey='p'>Lorem generator <b>P</b>ipeline</a><br>\n")
+	io.WriteString(w, "------------------------------------------<br>\n")
 
 	io.WriteString(w, "--  <a href='/try-bin-pack'   target='b_out'>Binpack study 1</a><br>\n")
 	io.WriteString(w, `--  <a href='/try-bin-pack?tplName=base-01-ng&tplName=content02'   
@@ -82,8 +84,8 @@ func backend(w http.ResponseWriter, r *http.Request) {
 
 	io.WriteString(w, "--  <a href='/matrix-raw'     target='b_out'>Matrix raw</a><br>\n")
 
-	io.WriteString(w, "------------------------------------------<br>\n")
-	io.WriteString(w, "--  <a href='/pipeline-all'   target='b_out'  accesskey='p'><b>P</b>ipeline All</a><br>\n")
+	io.WriteString(w, "--  <a href='/regenerate-random-amorphs'   target='b_out'  accesskey='p'>Randomized Amorphs regenerate + <b>p</b>lumb them into layout</a><br>\n")
+
 }
 
 func init() {

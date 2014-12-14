@@ -65,17 +65,6 @@
 	<div class='blc pa t{{.Layout1.ISouth}} l0' style='height:1px;width:{{.TotalGridWidth}}px;background-color:#ff2;'>&nbsp; &nbsp; &nbsp; &nbsp; is</div>
 
 
-	<div class='blc pa l7  t11 w12 ' style='white-space:pre; line-height:15px;;height: auto; 
-		padding: 4px;background-color: #cc2' 
->1. circle around
-2. concentrate on either entire sides, or mere corners, or divide into sub-spaces
-3. permutate all amorphs
-4. preference a: prefer those fitting into cavities (min interior cavities)
-5. preference b: minimize exterior cavities - longest even line
-5b.   give special penalty for deep external cavities
-6. prefer amorphs, which "snap to" outer limit
-6b. penalize small external cavities at outer limit
-	</div>
 
 	{{range $idxLine, $lpLine := .Layout1.OutlineN }}
 		{{if $lpLine.Vert }}
@@ -117,6 +106,20 @@
 		{{end}}
 	{{end}}
 	</div>
+
+
+	<div class='blc pa l6  t11 w14 ' style='white-space:pre; line-height:13px;;height: auto; 
+		padding: 4px;background-color: #cc2;font-family:tahoma;' 
+>1. circle around sides
+2. treat either entire sides, or mere corners, or divide into sub-spaces
+3. fill in *internal* cavities
+4. fill outer cavities - prefer upper horizontal snap ins
+5. plaster stairways -  prefer vertical snap ins - from vertical center to east and westwards
+6. strive for longest continuous borders (as percentage of rectangle circumplex)
+7. give extra penalty for deep external cavities
+8. give extra penalty for external cavities towards *hard* outer limit
+9. make permutation tree and vary	</div>
+
 
 </div>
 {{end}}
