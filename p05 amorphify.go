@@ -98,8 +98,8 @@ func amorphifyAll() {
 		}
 		bA2 := subsort.SortByStringValDesc(len(articlesAmorphified[i].Amorphs), f1)
 		bS2 := subsort.SortByIntValAsc(len(articlesAmorphified[i].Amorphs), f2)
-		articlesAmorphified[i].AmorphsByAesth = *bA2
-		articlesAmorphified[i].AmorphsBySlack = *bS2
+		articlesAmorphified[i].AmorphsByAesth = bA2
+		articlesAmorphified[i].AmorphsBySlack = bS2
 
 	}
 }
